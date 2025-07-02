@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Carrera</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #111;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+
+    .header {
+      background: #000;
+      padding: 10px;
+      text-align: center;
+      position: relative;
+    }
+
+    .titulo {
+      margin-bottom: 10px;
+    }
+
+    .pista {
+      background: url('fondo.gif') no-repeat center center;
+      background-size: cover;
+      height: 160px;
+      margin: 10px 0;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 5px solid #111;
+    }
+
+    .corredor {
+      position: absolute;
+      top: 10px;
+      left: 0;
+      width: 135px;
+      height: 135px;
+    }
+
+    .animal {
+      width: 135px;
+      height: 135px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .bandera {
+      width: 45px;
+      height: 30px;
+      position: absolute;
+      top: 50px;
+      left: 45px;
+      z-index: 1;
+    }
+
+    .meta {
+      position: absolute;
+      right: 0;
+      width: 10px;
+      height: 100%;
+      background: white;
+    }
+
+    .gol {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 72px;
+      font-weight: bold;
+      color: yellow;
+      text-shadow: 0 0 10px red;
+      z-index: 10;
+      animation: golAnimation 1.5s ease-out;
+      display: none;
+    }
+
+    @keyframes golAnimation {
+      0% { transform: translate(-50%, -50%) scale(0.1); opacity: 0; }
+      50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+    }
+
+    .marcador {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      font-size: 24px;
+      background: rgba(0,0,0,0.7);
+      padding: 5px 15px;
+      border-radius: 10px;
+      margin: 0 auto;
+      width: fit-content;
+    }
+
+    .puntaje {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .bandera-marcador {
+      width: 30px;
+      height: 20px;
+    }
+
+    .botones-goles {
+      display: flex;
+      gap: 5px;
+    }
+
+    .boton-gol {
+      background: #333;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      width: 30px;
+      height: 30px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .boton-gol:hover {
+      background: #555;
+    }
+
+    .sumar {
+      background: #2ecc71;
+    }
+
+    .restar {
+      background: #e74c3c;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="marcador" id="marcador">
+      <!-- Se llenará dinámicamente con JavaScript -->
+    </div>
+  </div>
+
+  <div class="pista" id="pista1">
+    <div class="corredor" id="gato1">
+      <img class="animal" src="animal.gif">
+      <img class="bandera" src="https://upload.wikimedia.org/wikipedia/commons/f/fc/Flag_of_Mexico.svg">
+    </div>
+    <div class="meta"></div>
+    <div class="gol" id="gol1">GOL!</div>
+  </div>
+
+  <div class="pista" id="pista2">
+    <div class="corredor" id="gato2">
+      <img class="animal" src="animal.gif">
+      <img class="bandera" src="https://upload.wikimedia.org/wikipedia/commons/e/e8/Flag_of_Ecuador.svg">
+    </div>
+    <div class="meta"></div>
+    <div class="gol" id="gol2">GOL!</div>
+  </div>
+
+  <div class="pista" id="pista3">
+    <div class="corredor" id="gato3">
+      <img class="animal" src="animal.gif">
+      <img class="bandera" src="https://upload.wikimedia.org/wikipedia/commons/2/21/Flag_of_Colombia.svg">
+    </div>
+    <div class="meta"></div>
+    <div class="gol" id="gol3">GOL!</div>
+  </div>
+
+  <div class="pista" id="pista4">
+    <div class="corredor" id="gato4">
+      <img class="animal" src="animal.gif">
+      <img class="bandera" src="https://upload.wikimedia.org/wikipedia/en/0/05/Flag_of_Brazil.svg">
+    </div>
+    <div class="meta"></div>
+    <div class="gol" id="gol4">GOL!</div>
+  </div>
+
+  <div class="pista" id="pista5">
+    <div class="corredor" id="gato5">
+      <img class="animal" src="animal.gif">
+      <img class="bandera" src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_Argentina.svg">
+    </div>
+    <div class="meta"></div>
+    <div class="gol" id="gol5">GOL!</div>
+  </div>
+
+  <script>
+    const gatos = [
+      { id: "gato1", nombre: "México", avance: 0, goles: 0, bandera: "https://upload.wikimedia.org/wikipedia/commons/f/fc/Flag_of_Mexico.svg" },
+      { id: "gato2", nombre: "Ecuador", avance: 0, goles: 0, bandera: "https://upload.wikimedia.org/wikipedia/commons/e/e8/Flag_of_Ecuador.svg" },
+      { id: "gato3", nombre: "Colombia", avance: 0, goles: 0, bandera: "https://upload.wikimedia.org/wikipedia/commons/2/21/Flag_of_Colombia.svg" },
+      { id: "gato4", nombre: "Brasil", avance: 0, goles: 0, bandera: "https://upload.wikimedia.org/wikipedia/en/0/05/Flag_of_Brazil.svg" },
+      { id: "gato5", nombre: "Argentina", avance: 0, goles: 0, bandera: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_Argentina.svg" }
+    ];
+
+    // Inicializar marcador
+    function actualizarMarcador() {
+      const marcador = document.getElementById("marcador");
+      marcador.innerHTML = "";
+      
+      gatos.forEach((gato, index) => {
+        const puntaje = document.createElement("div");
+        puntaje.className = "puntaje";
+        
+        const bandera = document.createElement("img");
+        bandera.className = "bandera-marcador";
+        bandera.src = gato.bandera;
+        
+        const texto = document.createElement("span");
+        texto.textContent = gato.goles;
+        
+        // Crear contenedor de botones
+        const botones = document.createElement("div");
+        botones.className = "botones-goles";
+        
+        // Botón sumar
+        const btnSumar = document.createElement("button");
+        btnSumar.className = "boton-gol sumar";
+        btnSumar.textContent = "+";
+        btnSumar.onclick = () => {
+          gato.goles++;
+          actualizarMarcador();
+        };
+        
+        // Botón restar
+        const btnRestar = document.createElement("button");
+        btnRestar.className = "boton-gol restar";
+        btnRestar.textContent = "-";
+        btnRestar.onclick = () => {
+          if (gato.goles > 0) {
+            gato.goles--;
+            actualizarMarcador();
+          }
+        };
+        
+        botones.appendChild(btnSumar);
+        botones.appendChild(btnRestar);
+        
+        puntaje.appendChild(bandera);
+        puntaje.appendChild(texto);
+        puntaje.appendChild(botones);
+        marcador.appendChild(puntaje);
+      });
+    }
+
+    document.addEventListener("keydown", (e) => {
+      const tecla = e.key;
+      const index = parseInt(tecla) - 1;
+      if (index >= 0 && index < gatos.length) {
+        avanzarGato(index);
+      }
+    });
+
+    function mostrarGol(index) {
+      const golElement = document.getElementById(`gol${index + 1}`);
+      golElement.style.display = "block";
+      
+      setTimeout(() => {
+        golElement.style.display = "none";
+      }, 1500);
+    }
+
+    function avanzarGato(index) {
+      const gato = gatos[index];
+      gato.avance += 5;
+      if (gato.avance >= 90) {
+        document.getElementById(gato.id).style.left = "90%";
+        gato.goles++;
+        mostrarGol(index);
+        actualizarMarcador();
+        setTimeout(() => {
+          reiniciarCarrera();
+        }, 2000);
+      } else {
+        document.getElementById(gato.id).style.left = gato.avance + "%";
+      }
+    }
+
+    function reiniciarCarrera() {
+      gatos.forEach(gato => {
+        gato.avance = 0;
+        document.getElementById(gato.id).style.left = "0%";
+      });
+    }
+
+    // Inicializar el marcador al cargar la página
+    actualizarMarcador();
+  </script>
+</body>
+</html>
